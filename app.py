@@ -31,10 +31,39 @@ if modulos == "Home":
 del módulo 1 Python for Analytics 
                 Las tecnologías empleadas en este proyecto son Github, Streamlit y Python""") 
 
+elif modulos == "Ítem 1: Información general del dataset":
 
+#Cargar el archivo
+archivo_cargado = st.file_uploader("Carga tu archivo", type=["csv"])
 
+#Almacenamiento del dataframe
+df = None
 
+#Validación de la carga
+if archivo_cargado is not None:
+    try:
+        df = pd.read_csv(archivo_cargado)
+        st.success("¡Archivo cargado correctamente!")
+        
+    except Exception as e:
+        st.error(f"Error al leer el archivo: {e}")
 
+# Si el df se cargo con éxito, mostrar la información solicitada
+if df is not None:
+    #Dimensiones del dataset (filas y columnas)
+    filas, columnas = df.shape
+    
+    st.subheader("Dimensiones del Dataset")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric(label="Número de Filas", value=f"{filas:,}")
+    with col2:
+        st.metric(label="Número de Columnas", value=f"{columnas:,}")
 
+    #Head del dataset
+    st.subheader("Vista Previa (primeras filas)")
+    st.dataframe(df.head(), use_container_width=True)
+else:
+    st.info("Por favor, sube un archivo para continuar.")
 
 
