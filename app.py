@@ -11,7 +11,8 @@ st.divider()
 
 st.sidebar.title("Parámetros")
 
-modulos = st.sidebar.selectbox ("Selecione un módulo", ["Home","Ítem 1: Información general del dataset", "Ítem 2: Clasificación de variables",
+modulos = st.sidebar.selectbox ("Selecione un módulo", ["Home", "Carga del dataset",
+                                                        "Ítem 1: Información general del dataset", "Ítem 2: Clasificación de variables",
                                                         "Ítem 3: Estadísticas descriptivas", "Ítem 4: Análisis de valores faltantes",
                                                         "Ítem 5: Distribución de variables numéricas", "Ítem 6: Análisis de variables categóricas",
                                                         "Ítem 7: Análisis bivariado (numérico vs categórico)","Ítem 8: Análisis bivariado (categórico vs categórico)",
@@ -31,7 +32,7 @@ if modulos == "Home":
   del módulo 1 Python for Analytics 
                 Las tecnologías empleadas en este proyecto son Github, Streamlit y Python""") 
 
-elif modulos == "Ítem 1: Información general del dataset":
+elif modulos == "Carga del dataset":
 
   #Cargar el archivo
   archivo_cargado = st.file_uploader("Carga tu archivo", type=["csv"])
