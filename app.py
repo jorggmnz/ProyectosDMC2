@@ -52,7 +52,7 @@ elif modulos == "Carga del dataset":
   df = None
 
 #Validación de la carga
-    if archivo_cargado is not None:
+if archivo_cargado is not None:
         try:
             df = pd.read_csv(archivo_cargado, sep=';')
             st.success("¡Archivo cargado correctamente!")
