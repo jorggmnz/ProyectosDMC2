@@ -63,7 +63,7 @@ if archivo_cargado is not None:
         df = st.session_state["df"]
 
     # Si el df se cargo con éxito, mostrar la información solicitada
-    if df is not None:
+if df is not None:
     #Dimensiones del dataset (filas y columnas)
         filas, columnas = df.shape
     
@@ -77,7 +77,7 @@ if archivo_cargado is not None:
         #Head del dataset
         st.subheader("Vista Previa (primeras filas)")
         st.dataframe(df.head(), use_container_width=True)
-    else:
+else:
         st.info("Por favor, sube un archivo para continuar.")
 
 # ÍTEM 1: INFORMACIÓN GENERAL DEL DATASET
