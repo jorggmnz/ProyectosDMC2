@@ -42,7 +42,7 @@ elif modulos == "Ítem 1: Información general del dataset":
 #Validación de la carga
 if archivo_cargado is not None:
     try:
-        df = pd.read_csv(archivo_cargado, sep=',')
+        df = pd.read_csv(archivo_cargado, sep=';')
         st.success("¡Archivo cargado correctamente!")
         
     except Exception as e:
