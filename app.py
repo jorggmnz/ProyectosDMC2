@@ -182,8 +182,10 @@ elif modulos == "Ítem 3: Estadísticas descriptivas":
             st.info("El dataset no contiene variables numéricas.")
     else:
         st.info("Carga un archivo en el módulo correspondiente.")
-
+        
+# ====================================================
 # ÍTEM 4: ANÁLISIS DE VALORES FALTANTES
+# ====================================================
 elif modulos == "Ítem 4: Análisis de valores faltantes":
     df = st.session_state["df"]
     if df is not None:
@@ -219,12 +221,13 @@ elif modulos == "Ítem 4: Análisis de valores faltantes":
             * **Conservación:** Si los datos faltantes son < 5%, se puede mantener el dataset o aplicar imputación por la mediana (numéricas) o moda (categóricas).
             * **Eliminación:** Si superan el 40-50%, se sugiere eliminar la variable para evitar sesgos en modelos analíticos.
             * **Imputación Específica:** En datos deportivos, métricas de rendimiento faltantes pueden imputarse agrupando por posición/rol del jugador.
-            """)        
+            """)
     else:
         st.info("Carga un archivo CSV en el módulo correspondiente.")
 
-
+# ====================================================
 # ÍTEM 5: DISTRIBUCIÓN DE VARIABLES NUMÉRICAS
+# ====================================================
 elif modulos == "Ítem 5: Distribución de variables numéricas":
     df = st.session_state["df"]
     if df is not None:
@@ -272,8 +275,9 @@ elif modulos == "Ítem 5: Distribución de variables numéricas":
     else:
         st.info("Carga un archivo CSV en el módulo correspondiente.")
 
-
+# ====================================================
 # ÍTEM 6: ANÁLISIS DE VARIABLES CATEGÓRICAS
+# ====================================================
 elif modulos == "Ítem 6: Análisis de variables categóricas":
     df = st.session_state["df"]
     if df is not None:
