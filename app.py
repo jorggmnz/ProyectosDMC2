@@ -34,7 +34,7 @@ if modulos == "Home":
 elif modulos == "Ítem 1: Información general del dataset":
 
   #Cargar el archivo
-  archivo_cargado = st.file_uploader("Carga tu archivo", type=["csv"])
+  archivo_cargado = st.file_uploader("Carga tu archivo", type=["csv"], sep=',')
 
   #Almacenamiento del dataframe
   df = None
