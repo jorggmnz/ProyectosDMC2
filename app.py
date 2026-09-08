@@ -34,7 +34,7 @@ if modulos == "Home":
 elif modulos == "Ítem 1: Información general del dataset":
 
   #Cargar el archivo
-  archivo_cargado = st.file_uploader("Carga tu archivo", type=["csv"], sep=',')
+  archivo_cargado = st.file_uploader("Carga tu archivo", type=["csv"])
 
   #Almacenamiento del dataframe
   df = None
@@ -42,7 +42,7 @@ elif modulos == "Ítem 1: Información general del dataset":
 #Validación de la carga
 if archivo_cargado is not None:
     try:
-        df = pd.read_csv(archivo_cargado)
+        df = pd.read_csv(archivo_cargado, sep=',')
         st.success("¡Archivo cargado correctamente!")
         
     except Exception as e:
