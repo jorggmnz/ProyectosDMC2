@@ -1,5 +1,7 @@
+import matplotlib.pyplot as plt
 import io
 import pandas as pd
+import seaborn as sns
 import streamlit as st
 
 st.title("Proyecto aplicado N°2: Carga y validación de datos")
@@ -134,7 +136,7 @@ elif modulos == "Ítem 2: Clasificación de variables":
     else:
         st.info("Carga un archivo CSV en el módulo correspondiente.")
 
-#ESTADÍSTICAS DESCRIPTIVAS
+#ÍTEM 3: ESTADÍSTICAS DESCRIPTIVAS
 
 elif modulos == "Ítem 3: Estadísticas descriptivas":
     df = st.session_state["df"]
@@ -181,3 +183,124 @@ elif modulos == "Ítem 3: Estadísticas descriptivas":
     else:
         st.info("Carga un archivo en el módulo correspondiente.")
 
+# ÍTEM 4: ANÁLISIS DE VALORES FALTANTES
+elif modulos == "Ítem 4: Análisis de valores faltantes":
+    df = st.session_state["df"]
+    if df is not None:
+        st.subheader("Ítem 4: Análisis de Valores Faltantes")
+
+        nulos_count = df.isnull().sum()
+        nulos_pct = (nulos_count / len(df)) * 100
+
+        df_missing = pd.DataFrame(
+            {"Cant. Faltantes": nulos_count, "% Faltantes": nulos_pct.round(2)}
+        )
+        df_missing = df_missing[df_missing["Cant. Faltantes"] > 0].sort_values(
+            by="Cant. Faltantes", ascending=False
+        )
+
+        if not df_missing.empty:
+            st.dataframe(df_missing, use_container_width=True)
+
+            # Gráfico de barras simple de nulos
+            fig, ax = plt.subplots(figsize=(8, 4))
+            sns.barplot(
+                x=df_missing["% Faltantes"], y=df_missing.index, ax=ax, palette="Reds_r"
+            )
+            ax.set_title("Porcentaje de Valores Faltantes por Variable")
+            ax.set_xlabel("% Faltantes")
+            st.pyplot(fig)
+        else:
+            st.success("El dataset no contiene valores faltantes.")
+
+        # Discusión sobre tratamiento
+        with st.expander("Discusión técnica sobre tratamiento/conservación"):
+    else:
+        st.info("Carga un archivo CSV en el módulo correspondiente.")
+
+
+# ÍTEM 5: DISTRIBUCIÓN DE VARIABLES NUMÉRICAS
+elif modulos == "Ítem 5: Distribución de variables numéricas":
+    df = st.session_state["df"]
+    if df is not None:
+        st.subheader("Ítem 5: Distribución de Variables Numéricas")
+
+        cols_objetivo = [
+            "player_rating",
+            "performance_score",
+            "pass_accuracy",
+            "distance_covered_km",
+            "top_speed_kmh",
+        ]
+        # Filtrar solo las columnas que existan en el dataset cargado
+        cols_existentes = [c for c in cols_objetivo if c in df.columns]
+
+        if not cols_existentes:
+            cols_existentes = df.select_dtypes(include=["number"]).columns.tolist()
+
+        col_sel = st.selectbox("Seleccione la variable a analizar", cols_existentes)
+
+        if col_sel:
+            # Histograma General
+            fig, ax = plt.subplots(figsize=(8, 4))
+            sns.histplot(df[col_sel], kde=True, ax=ax, color="skyblue")
+            ax.set_title(f"Distribución General de {col_sel}")
+            st.pyplot(fig)
+
+            # Segmentación por posición (si existe la columna de posición)
+            col_pos = [c for c in df.columns if "pos" in c.lower()]
+            if col_pos:
+                st.write(f"**Distribución de {col_sel} por Posición**")
+                pos_col = col_pos[0]
+                fig_pos, ax_pos = plt.subplots(figsize=(9, 5))
+                sns.boxplot(data=df, x=pos_col, y=col_sel, ax=ax_pos, palette="Set2")
+                ax_pos.set_title(f"{col_sel} según {pos_col}")
+                plt.xticks(rotation=45)
+                st.pyplot(fig_pos)
+
+            # Interpretación breve
+            with st.expander("Interpretación de la forma de distribución"):
+                st.markdown("""
+                * **Asimetría:** Permite identificar si los datos se concentran hacia valores bajos (sesgo positivo) o altos (sesgo negativo).
+                * **Segmentación por Posición:** Vital en deportes para evitar comparaciones inadecuadas (ej: comparar distancia recorrida de porteros vs mediocampistas).
+                """)
+    else:
+        st.info("Carga un archivo CSV en el módulo correspondiente.")
+
+
+# ÍTEM 6: ANÁLISIS DE VARIABLES CATEGÓRICAS
+elif modulos == "Ítem 6: Análisis de variables categóricas":
+    df = st.session_state["df"]
+    if df is not None:
+        st.subheader("Ítem 6: Análisis de Variables Categóricas")
+
+        cat_cols = df.select_dtypes(exclude=["number"]).columns.tolist()
+
+        if cat_cols:
+            col_cat = st.selectbox("Seleccione una variable categórica", cat_cols)
+
+            if col_cat:
+                # Tabla de frecuencias y proporciones
+                counts = df[col_cat].value_counts()
+                props = (df[col_cat].value_counts(normalize=True) * 100).round(2)
+
+                df_cat = pd.DataFrame({"Conteo": counts, "Proporción (%)": props})
+                
+                col_t, col_g = st.columns([1, 1.5])
+
+                with col_t:
+                    st.write("**Frecuencias y Proporciones**")
+                    st.dataframe(df_cat, use_container_width=True)
+
+                with col_g:
+                    fig, ax = plt.subplots(figsize=(6, 4))
+                    sns.barplot(
+                        x=counts.values, y=counts.index, ax=ax, palette="viridis"
+                    )
+                    ax.set_title(f"Distribución de {col_cat}")
+                    ax.set_xlabel("Cantidad")
+                    st.pyplot(fig)
+        else:
+            st.info("No se encontraron variables categóricas en el dataset.")
+    else:
+        st.info("Carga un archivo CSV en el módulo correspondiente.")
