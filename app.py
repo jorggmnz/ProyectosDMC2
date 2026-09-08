@@ -52,33 +52,33 @@ elif modulos == "Carga del dataset":
   df = None
 
 #Validación de la carga
-if archivo_cargado is not None:
-    try:
-        df = pd.read_csv(archivo_cargado, sep=';')
-        st.success("¡Archivo cargado correctamente!")
+    if archivo_cargado is not None:
+        try:
+            df = pd.read_csv(archivo_cargado, sep=';')
+            st.success("¡Archivo cargado correctamente!")
         
-    except Exception as e:
-        st.error(f"Error al leer el archivo: {e}")
+        except Exception as e:
+            st.error(f"Error al leer el archivo: {e}")
 
-df = st.session_state["df"]
+        df = st.session_state["df"]
 
-# Si el df se cargo con éxito, mostrar la información solicitada
-if df is not None:
+    # Si el df se cargo con éxito, mostrar la información solicitada
+    if df is not None:
     #Dimensiones del dataset (filas y columnas)
-    filas, columnas = df.shape
+        filas, columnas = df.shape
     
-    st.subheader("Dimensiones del Dataset")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric(label="Número de Filas", value=f"{filas:,}")
-    with col2:
-        st.metric(label="Número de Columnas", value=f"{columnas:,}")
+        st.subheader("Dimensiones del Dataset")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric(label="Número de Filas", value=f"{filas:,}")
+        with col2:
+            st.metric(label="Número de Columnas", value=f"{columnas:,}")
 
-    #Head del dataset
-    st.subheader("Vista Previa (primeras filas)")
-    st.dataframe(df.head(), use_container_width=True)
-else:
-    st.info("Por favor, sube un archivo para continuar.")
+        #Head del dataset
+        st.subheader("Vista Previa (primeras filas)")
+        st.dataframe(df.head(), use_container_width=True)
+    else:
+        st.info("Por favor, sube un archivo para continuar.")
 
 # ÍTEM 1: INFORMACIÓN GENERAL DEL DATASET
 # ----------------------------------------------------
