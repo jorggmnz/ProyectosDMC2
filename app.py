@@ -215,6 +215,11 @@ elif modulos == "Ítem 4: Análisis de valores faltantes":
 
         # Discusión sobre tratamiento
         with st.expander("Discusión técnica sobre tratamiento/conservación"):
+            st.markdown("""
+            * **Conservación:** Si los datos faltantes son < 5%, se puede mantener el dataset o aplicar imputación por la mediana (numéricas) o moda (categóricas).
+            * **Eliminación:** Si superan el 40-50%, se sugiere eliminar la variable para evitar sesgos en modelos analíticos.
+            * **Imputación Específica:** En datos deportivos, métricas de rendimiento faltantes pueden imputarse agrupando por posición/rol del jugador.
+            """)        
     else:
         st.info("Carga un archivo CSV en el módulo correspondiente.")
 
