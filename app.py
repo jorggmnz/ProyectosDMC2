@@ -9,6 +9,17 @@ st.write("Año: 2026")
 # Separador visual
 st.divider()
 
+#Mantener el df en memoria
+if "df" not in st.session_state:
+    st.session_state["df"] = None
+
+
+# Función personalizada para clasificación (Ítem 2)
+def clasificar_variables(dataframe):
+    num_cols = dataframe.select_dtypes(include=["number"]).columns.tolist()
+    cat_cols = dataframe.select_dtypes(exclude=["number"]).columns.tolist()
+    return num_cols, cat_cols, len(num_cols), len(cat_cols)
+  
 st.sidebar.title("Parámetros")
 
 modulos = st.sidebar.selectbox ("Selecione un módulo", ["Home", "Carga del dataset",
@@ -49,6 +60,8 @@ if archivo_cargado is not None:
     except Exception as e:
         st.error(f"Error al leer el archivo: {e}")
 
+df = st.session_state["df"]
+
 # Si el df se cargo con éxito, mostrar la información solicitada
 if df is not None:
     #Dimensiones del dataset (filas y columnas)
@@ -67,4 +80,37 @@ if df is not None:
 else:
     st.info("Por favor, sube un archivo para continuar.")
 
+# ÍTEM 1: INFORMACIÓN GENERAL DEL DATASET
+# ----------------------------------------------------
+elif modulos == "Ítem 1: Información general del dataset":
+    df = st.session_state["df"]
+    if df is not None:
+        st.subheader("Ítem 1: Información General")
 
+        # Tabla de tipos y nulos
+        info_df = pd.DataFrame(
+            {
+                "Tipo de Dato": df.dtypes.astype(str),
+                "Valores Nulos": df.isnull().sum(),
+                "% Nulos": (df.isnull().sum() / len(df) * 100)
+                .round(2)
+                .astype(str)
+                + "%",
+            }
+        )
+        st.dataframe(info_df, use_container_width=True)
+
+        #Duplicados
+        duplicados = df.duplicated().sum()
+        if duplicados > 0:
+            st.warning(f"Se detectaron {duplicados:,} registros duplicados.")
+        else:
+            st.success("No hay registros duplicados.")
+
+        #df.info()
+        with st.expander("Ver salida técnica de df.info()"):
+            buffer = io.StringIO()
+            df.info(buf=buffer)
+            st.text(buffer.getvalue())
+    else:
+        st.info("Carga un archivo en el módulo correspondiente.")
