@@ -389,7 +389,7 @@ elif modulos == "Ítem 8: Análisis bivariado (categórico vs categórico)":
             crosstab_counts = pd.crosstab(df[var1], df[var2])
             crosstab_pct = pd.crosstab(df[var1], df[var2], normalize="index") * 100
 
-            st.write(**Tabla de Frecuencias Absolutas**)
+            st.write("**Tabla de Frecuencias Absolutas**")
             st.dataframe(crosstab_counts, use_container_width=True)
 
             # Gráfico de barras apiladas
