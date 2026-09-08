@@ -28,16 +28,16 @@ if modulos == "Home":
   st.divider()
 
   st.markdown("""Esta aplicación permite poner en practica todo lo aprendido y desarrollado en las primeras clases
-del módulo 1 Python for Analytics 
+  del módulo 1 Python for Analytics 
                 Las tecnologías empleadas en este proyecto son Github, Streamlit y Python""") 
 
 elif modulos == "Ítem 1: Información general del dataset":
 
-#Cargar el archivo
-archivo_cargado = st.file_uploader("Carga tu archivo", type=["csv"])
+  #Cargar el archivo
+  archivo_cargado = st.file_uploader("Carga tu archivo", type=["csv"])
 
-#Almacenamiento del dataframe
-df = None
+  #Almacenamiento del dataframe
+  df = None
 
 #Validación de la carga
 if archivo_cargado is not None:
