@@ -82,6 +82,7 @@ else:
 
 # ÍTEM 1: INFORMACIÓN GENERAL DEL DATASET
 # ----------------------------------------------------
+
 elif modulos == "Ítem 1: Información general del dataset":
     df = st.session_state["df"]
     if df is not None:
