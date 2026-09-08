@@ -313,3 +313,159 @@ elif modulos == "Ítem 6: Análisis de variables categóricas":
             st.info("No se encontraron variables categóricas en el dataset.")
     else:
         st.info("Carga un archivo CSV en el módulo correspondiente.")
+
+# ====================================================
+# ÍTEM 7: ANÁLISIS BIVARIADO (NUMÉRICO VS CATEGÓRICO)
+# ====================================================
+elif modulos == "Ítem 7: Análisis bivariado (numérico vs categórico)":
+    df = st.session_state["df"]
+    if df is not None:
+        st.subheader("Ítem 7: Análisis Bivariado (Numérico vs Categórico)")
+
+        # Definir pares de comparación predeterminados
+        comparaciones = [
+            ("player_rating", "position"),
+            ("performance_score", "match_result"),
+            ("distance_covered_km", "position"),
+            ("top_speed_kmh", "position"),
+        ]
+
+        # Filtrar solo las parejas que existan en el dataset
+        comp_validas = [
+            f"{num} vs {cat}"
+            for num, cat in comparaciones
+            if num in df.columns and cat in df.columns
+        ]
+
+        if comp_validas:
+            opcion = st.selectbox("Seleccione la relación a analizar", comp_validas)
+            num_var, cat_var = opcion.split(" vs ")
+
+            # Gráfico de caja (Boxplot)
+            fig, ax = plt.subplots(figsize=(8, 4))
+            sns.boxplot(data=df, x=cat_var, y=num_var, ax=ax, palette="Set2")
+            ax.set_title(f"Distribución de {num_var} por {cat_var}")
+            plt.xticks(rotation=45)
+            st.pyplot(fig)
+
+            # Estadísticas agrupadas (Media y Mediana)
+            st.write(f"**Resumen estadístico de {num_var} según {cat_var}:**")
+            resumen = (
+                df.groupby(cat_var)[num_var]
+                .agg(["count", "mean", "median", "std"])
+                .round(2)
+            )
+            st.dataframe(resumen, use_container_width=True)
+        else:
+            st.warning("No se encontraron las columnas requeridas para las comparaciones predeterminadas.")
+    else:
+        st.info("Carga un archivo CSV en el módulo correspondiente.")
+
+# ====================================================
+# ÍTEM 8: ANÁLISIS BIVARIADO (CATEGÓRICO VS CATEGÓRICO)
+# ====================================================
+elif modulos == "Ítem 8: Análisis bivariado (categórico vs categórico)":
+    df = st.session_state["df"]
+    if df is not None:
+        st.subheader("Ítem 8: Análisis Bivariado (Categórico vs Categórico)")
+
+        comparaciones = [
+            ("position", "tournament_stage"),
+            ("team", "match_result"),
+            ("preferred_foot", "position"),
+        ]
+
+        comp_validas = [
+            f"{var1} vs {var2}"
+            for var1, var2 in comparaciones
+            if var1 in df.columns and var2 in df.columns
+        ]
+
+        if comp_validas:
+            opcion = st.selectbox("Seleccione la combinación categórica", comp_validas)
+            var1, var2 = opcion.split(" vs ")
+
+            # Tabla cruzada (Crosstab)
+            crosstab_counts = pd.crosstab(df[var1], df[var2])
+            crosstab_pct = pd.crosstab(df[var1], df[var2], normalize="index") * 100
+
+            st.write(**Tabla de Frecuencias Absolutas**)
+            st.dataframe(crosstab_counts, use_container_width=True)
+
+            # Gráfico de barras apiladas
+            fig, ax = plt.subplots(figsize=(8, 4))
+            crosstab_pct.plot(kind="bar", stacked=True, ax=ax, colormap="tab10")
+            ax.set_title(f"Distribución porcentual de {var2} por {var1}")
+            ax.set_ylabel("Porcentaje (%)")
+            plt.xticks(rotation=45)
+            st.legend(title=var2, bbox_to_anchor=(1.05, 1), loc="upper left")
+            st.pyplot(fig)
+        else:
+            st.warning("No se encontraron las columnas requeridas para las comparaciones categóricas.")
+    else:
+        st.info("Carga un archivo CSV en el módulo correspondiente.")
+
+# ====================================================
+# ÍTEM 9: ANÁLISIS BASADO EN PARÁMETROS SELECCIONADOS
+# ====================================================
+elif modulos == "Ítem 9: Análisis basado en parámetros seleccionados":
+    df = st.session_state["df"]
+    if df is not None:
+        st.subheader("Ítem 9: Análisis Dinámico por Parámetros")
+
+        # Copia de trabajo
+        df_filt = df.copy()
+
+        # Conversión de fecha si existe match_date
+        if "match_date" in df_filt.columns:
+            df_filt["match_date"] = pd.to_datetime(df_filt["match_date"], errors="coerce")
+
+        # --- SECCIÓN DE FILTROS ---
+        st.sidebar.markdown("### Filtros Dinámicos")
+
+        filtros_cat = ["team", "position", "tournament_stage", "match_result", "player_name"]
+        for col in filtros_cat:
+            if col in df_filt.columns:
+                opciones = df_filt[col].dropna().unique().tolist()
+                sel = st.sidebar.multiselect(f"Filtrar por {col}:", opciones)
+                if sel:
+                    df_filt = df_filt[df_filt[col].isin(sel)]
+
+        # Filtro de rango numérico con slider (ejemplo con player_rating)
+        num_cols = df_filt.select_dtypes(include=["number"]).columns.tolist()
+        if num_cols:
+            col_num = st.sidebar.selectbox("Variable numérica para rango:", num_cols)
+            min_v, max_v = float(df[col_num].min()), float(df[col_num].max())
+            rango = st.sidebar.slider(
+                f"Rango de {col_num}:", min_v, max_v, (min_v, max_v)
+            )
+            df_filt = df_filt[
+                (df_filt[col_num] >= rango[0]) & (df_filt[col_num] <= rango[1])
+            ]
+
+        # --- PRESENTACIÓN DE RESULTADOS ---
+        st.write(f"**Registros encontrados:** {len(df_filt):,} de {len(df):,}")
+
+        if not df_filt.empty:
+            # Selección de métricas para comparar
+            metricas_disp = df_filt.select_dtypes(include=["number"]).columns.tolist()
+            if metricas_disp:
+                met_sel = st.multiselect(
+                    "Seleccione métricas a comparar:",
+                    metricas_disp,
+                    default=metricas_disp[:3],
+                )
+
+                if met_sel and "player_name" in df_filt.columns:
+                    st.write("**Comparación de Jugadores Filtrados:**")
+                    st.dataframe(
+                        df_filt[["player_name"] + met_sel].head(15),
+                        use_container_width=True,
+                    )
+
+            st.subheader("Vista Previa de Datos Filtrados")
+            st.dataframe(df_filt.head(), use_container_width=True)
+        else:
+            st.warning("No hay registros que cumplan con los filtros seleccionados.")
+    else:
+        st.info("Carga un archivo CSV en el módulo correspondiente.")
