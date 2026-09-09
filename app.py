@@ -495,3 +495,85 @@ elif modulos == "Ítem 9: Análisis basado en parámetros seleccionados":
             st.warning("No hay registros que cumplan con los filtros seleccionados.")
     else:
         st.info("Carga un archivo en el módulo correspondiente.")
+
+# ====================================================
+# ÍTEM 10: HALLAZGOS CLAVE
+# ====================================================
+elif modulos == "Ítem 10: Hallazgos clave":
+    df = st.session_state["df"]
+    if df is not None:
+        st.subheader("Ítem 10: Hallazgos Clave e Insights Ejecutivos")
+
+        # Preparación de datos y detección de estructura
+        df_hallazgos = df.copy()
+        col_pos = [c for c in df_hallazgos.columns if "pos" in c.lower()]
+        pos_var = col_pos[0] if col_pos else None
+
+        # --- 1. VISUALIZACIÓN RESUMEN (PANEL MULTIGRÁFICO) ---
+        st.write("### 1. Panel Resumen del Desempeño General")
+        
+        fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+        # Gráfico A: Distribución de métrica principal por posición
+        if pos_var and "player_rating" in df_hallazgos.columns:
+            sns.boxplot(
+                data=df_hallazgos, 
+                x=pos_var, 
+                y="player_rating", 
+                ax=axes[0], 
+                palette="Set2"
+            )
+            axes[0].set_title("Distribución de Player Rating por Posición")
+            axes[0].tick_params(axis='x', rotation=45)
+        elif "player_rating" in df_hallazgos.columns:
+            sns.histplot(df_hallazgos["player_rating"], kde=True, ax=axes[0], color="skyblue")
+            axes[0].set_title("Distribución General del Player Rating")
+
+        # Gráfico B: Relación Rendimiento vs Distancia (o Matriz de Correlación Corta)
+        cols_corr = [c for c in ["player_rating", "performance_score", "pass_accuracy", "distance_covered_km"] if c in df_hallazgos.columns]
+        if len(cols_corr) >= 2:
+            sns.heatmap(
+                df_hallazgos[cols_corr].corr(), 
+                annot=True, 
+                cmap="coolwarm", 
+                fmt=".2f", 
+                ax=axes[1]
+            )
+            axes[1].set_title("Matriz de Correlación de Métricas Clave")
+        
+        st.pyplot(fig)
+
+        st.divider()
+
+        # --- 2. INSIGHTS PRINCIPALES DERIVADOS DEL EDA ---
+        st.write("### 2. Insights Principales del Análisis Exploratorio")
+
+        col_ins1, col_ins2 = st.columns(2)
+
+        with col_ins1:
+            st.markdown("""
+            **Calidad y Estructura de Datos:**
+            * **Consistencia de Registros:** Se validó la ausencia de registros duplicados en el conjunto de datos y la integridad del tipado numérico/categórico.
+            * **Comportamiento Atípico:** La aplicación del rango intercuartílico ($1.5 \times \text{IQR}$) identificó variaciones marcadas en métricas de rendimiento, las cuales responden a la naturaleza de ciertas posiciones (ej. baja frecuencia de remates en defensas vs. atacantes).
+            """)
+
+        with col_ins2:
+            st.markdown("""
+            **Patrones Operativos y de Juego:**
+            * **Segregación por Rol:** Existe una clara heterogeneidad técnica entre porteros y jugadores de campo, requiriendo matrices de evaluación independientes.
+            * **Efecto de la Frecuencia:** El análisis a nivel de partido individual tiende a sobredimensionar extremos atípicos; la agregación por jugador ofrece una visión más representativa del rendimiento acumulado.
+            """)
+
+        st.divider()
+
+        # --- 3. RECOMENDACIONES ORIENTADAS A LA TOMA DE DECISIONES ---
+        st.write("### 3. Recomendaciones de Interpretación para la Gestión")
+
+        st.info("""
+        * **Evaluación Segmentada:** Se recomienda no comparar el desempeño global de atletas sin filtrar por su rol táctico (Porteros vs. Jugadores de Campo).
+        * **Toma de Decisiones Basada en Promedios:** Para decisiones de reclutamiento o renovación, priorizar el rendimiento consolidado por torneo antes que actuaciones aisladas de un único partido.
+        * **Monitoreo de Carga Física:** Cruce la distancia recorrida (`distance_covered_km`) con el rendimiento para identificar desgaste físico en fases avanzadas del torneo sin realizar inferencias predictivas.
+        """)
+
+    else:
+        st.info("Carga un archivo CSV en el módulo correspondiente.")
