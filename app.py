@@ -154,6 +154,7 @@ elif modulos == "Ítem 3: Estadísticas descriptivas":
                 use_container_width=True,
             )
 
+"""            
             # Detección de Outliers (IQR con lógica ajustada)
             st.write("**Detección de Valores Extremos (Criterio 1.5xIQR)**")
             outliers_data = []
@@ -194,7 +195,9 @@ elif modulos == "Ítem 3: Estadísticas descriptivas":
             st.info("El dataset no contiene variables numéricas aplicables.")
     else:
         st.info("Carga un archivo en el módulo correspondiente.")
-        
+"""
+
+
 #ÍTEM 4: ANÁLISIS DE VALORES FALTANTES
 elif modulos == "Ítem 4: Análisis de valores faltantes":
     df = st.session_state["df"]
