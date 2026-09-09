@@ -57,9 +57,9 @@ modulos = st.sidebar.selectbox(
 
 if modulos == "Home":
     st.subheader("Información General del Estudiante")
-    st.write("**Elaborado por:** Estudiante")
-    st.write("**Carrera:** Análisis de Datos")
-    st.write("**Universidad:** Universidad")
+    st.write("**Elaborado por:** Jorge Enrique Muñoz Ccasa")
+    st.write("**Carrera:** Estadística")
+    st.write("**Universidad:** Universidad Nacional Mayor de San Marcos")
     
     st.divider()
     
@@ -496,9 +496,8 @@ elif modulos == "Ítem 9: Análisis basado en parámetros seleccionados":
     else:
         st.info("Carga un archivo en el módulo correspondiente.")
 
-# ====================================================
+
 # ÍTEM 10: HALLAZGOS CLAVE
-# ====================================================
 elif modulos == "Ítem 10: Hallazgos clave":
     df = st.session_state["df"]
     if df is not None:
@@ -545,7 +544,7 @@ elif modulos == "Ítem 10: Hallazgos clave":
 
         st.divider()
 
-        # --- 2. INSIGHTS PRINCIPALES DERIVADOS DEL EDA ---
+        # 2 INSIGHTS DERIVADOS DEL EDA
         st.write("### 2. Insights Principales del Análisis Exploratorio")
 
         col_ins1, col_ins2 = st.columns(2)
@@ -554,14 +553,14 @@ elif modulos == "Ítem 10: Hallazgos clave":
             st.markdown("""
             **Calidad y Estructura de Datos:**
             * **Consistencia de Registros:** Se validó la ausencia de registros duplicados en el conjunto de datos y la integridad del tipado numérico/categórico.
-            * **Comportamiento Atípico:** La aplicación del rango intercuartílico ($1.5 \times \text{IQR}$) identificó variaciones marcadas en métricas de rendimiento, las cuales responden a la naturaleza de ciertas posiciones (ej. baja frecuencia de remates en defensas vs. atacantes).
+            * **Comportamiento Atípico:** La aplicación del rango intercuartílico identificó variaciones marcadas en métricas de rendimiento, las cuales responden a la naturaleza de ciertas posiciones.
             """)
 
         with col_ins2:
             st.markdown("""
             **Patrones Operativos y de Juego:**
-            * **Segregación por Rol:** Existe una clara heterogeneidad técnica entre porteros y jugadores de campo, requiriendo matrices de evaluación independientes.
-            * **Efecto de la Frecuencia:** El análisis a nivel de partido individual tiende a sobredimensionar extremos atípicos; la agregación por jugador ofrece una visión más representativa del rendimiento acumulado.
+            * **Segregación por Rol:** Existe una clara heterogeneidad técnica entre porteros y jugadores de campo, y requieren matrices de evaluación independientes.
+            * **Efecto de la Frecuencia:** El análisis a nivel de partido individual tiende a sobredimensionar extremos atípicos.
             """)
 
         st.divider()
@@ -570,10 +569,10 @@ elif modulos == "Ítem 10: Hallazgos clave":
         st.write("### 3. Recomendaciones de Interpretación para la Gestión")
 
         st.info("""
-        * **Evaluación Segmentada:** Se recomienda no comparar el desempeño global de atletas sin filtrar por su rol táctico (Porteros vs. Jugadores de Campo).
+        * **Evaluación Segmentada:** Como se sugiere, no se compara el desempeño global sin filtrar por su rol táctico (Porteros vs. Jugadores de Campo).
         * **Toma de Decisiones Basada en Promedios:** Para decisiones de reclutamiento o renovación, priorizar el rendimiento consolidado por torneo antes que actuaciones aisladas de un único partido.
-        * **Monitoreo de Carga Física:** Cruce la distancia recorrida (`distance_covered_km`) con el rendimiento para identificar desgaste físico en fases avanzadas del torneo sin realizar inferencias predictivas.
+        * **Monitoreo de Carga Física:** El cruce de la distancia recorrida con el rendimiento para identificar desgaste físico en fases avanzadas del torneo sin realizar inferencias predictivas.
         """)
 
     else:
-        st.info("Carga un archivo CSV en el módulo correspondiente.")
+        st.info("Carga un archivo en el módulo correspondiente.")
