@@ -409,7 +409,7 @@ elif modulos == "Ítem 8: Análisis bivariado (categórico vs categórico)":
             ax.set_title(f"Distribución porcentual de {var2} por {var1}")
             ax.set_ylabel("Porcentaje (%)")
             plt.xticks(rotation=45)
-            st.legend(title=var2, bbox_to_anchor=(1.05, 1), loc="upper left")
+            ax.legend(title=var2, bbox_to_anchor=(1.05, 1), loc="upper left")
             st.pyplot(fig)
         else:
             st.warning("No se encontraron las columnas requeridas para las comparaciones categóricas.")
