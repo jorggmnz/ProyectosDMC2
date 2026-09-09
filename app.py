@@ -152,7 +152,7 @@ elif modulos == "Ítem 3: Estadísticas descriptivas":
                 use_container_width=True,
             )
 
-            # Detección preliminar de outliers (IQR)
+            #Rango intercuartilico y detección outliers (IQR)
             st.write("**Detección de Valores Extremos (Criterio 1.5xIQR)**")
             outliers_data = []
             for col in num_vars:
@@ -182,9 +182,7 @@ elif modulos == "Ítem 3: Estadísticas descriptivas":
     else:
         st.info("Carga un archivo en el módulo correspondiente.")
         
-# ====================================================
 # ÍTEM 4: ANÁLISIS DE VALORES FALTANTES
-# ====================================================
 elif modulos == "Ítem 4: Análisis de valores faltantes":
     df = st.session_state["df"]
     if df is not None:
@@ -203,7 +201,7 @@ elif modulos == "Ítem 4: Análisis de valores faltantes":
         if not df_missing.empty:
             st.dataframe(df_missing, use_container_width=True)
 
-            # Gráfico de barras simple de nulos
+            #Gráfico de barras
             fig, ax = plt.subplots(figsize=(8, 4))
             sns.barplot(
                 x=df_missing["% Faltantes"], y=df_missing.index, ax=ax, palette="Reds_r"
@@ -217,16 +215,13 @@ elif modulos == "Ítem 4: Análisis de valores faltantes":
         # Discusión sobre tratamiento
         with st.expander("Discusión técnica sobre tratamiento/conservación"):
             st.markdown("""
-            * **Conservación:** Si los datos faltantes son < 5%, se puede mantener el dataset o aplicar imputación por la mediana (numéricas) o moda (categóricas).
+            * **Conservación:** Si los datos faltantes son < 5%, se puede mantener el dataset o aplicar imputación por la mediana (numéricas).
             * **Eliminación:** Si superan el 40-50%, se sugiere eliminar la variable para evitar sesgos en modelos analíticos.
-            * **Imputación Específica:** En datos deportivos, métricas de rendimiento faltantes pueden imputarse agrupando por posición/rol del jugador.
             """)
     else:
-        st.info("Carga un archivo CSV en el módulo correspondiente.")
+        st.info("Carga un archivo en el módulo correspondiente.")
 
-# ====================================================
 # ÍTEM 5: DISTRIBUCIÓN DE VARIABLES NUMÉRICAS
-# ====================================================
 elif modulos == "Ítem 5: Distribución de variables numéricas":
     df = st.session_state["df"]
     if df is not None:
@@ -268,15 +263,13 @@ elif modulos == "Ítem 5: Distribución de variables numéricas":
             # Interpretación breve
             with st.expander("Interpretación de la forma de distribución"):
                 st.markdown("""
-                * **Asimetría:** Permite identificar si los datos se concentran hacia valores bajos (sesgo positivo) o altos (sesgo negativo).
-                * **Segmentación por Posición:** Vital en deportes para evitar comparaciones inadecuadas (ej: comparar distancia recorrida de porteros vs mediocampistas).
+                * **Asimetría:** Util para identificar si los datos se concentran hacia valores bajos o altos.
                 """)
     else:
-        st.info("Carga un archivo CSV en el módulo correspondiente.")
+        st.info("Carga un archivo en el módulo correspondiente.")
 
-# ====================================================
+
 # ÍTEM 6: ANÁLISIS DE VARIABLES CATEGÓRICAS
-# ====================================================
 elif modulos == "Ítem 6: Análisis de variables categóricas":
     df = st.session_state["df"]
     if df is not None:
@@ -288,7 +281,7 @@ elif modulos == "Ítem 6: Análisis de variables categóricas":
             col_cat = st.selectbox("Seleccione una variable categórica", cat_cols)
 
             if col_cat:
-                # Tabla de frecuencias y proporciones
+            #Tabla de frecuencias y proporciones
                 counts = df[col_cat].value_counts()
                 props = (df[col_cat].value_counts(normalize=True) * 100).round(2)
 
@@ -311,11 +304,9 @@ elif modulos == "Ítem 6: Análisis de variables categóricas":
         else:
             st.info("No se encontraron variables categóricas en el dataset.")
     else:
-        st.info("Carga un archivo CSV en el módulo correspondiente.")
+        st.info("Carga un archivo en el módulo correspondiente.")
 
-# ====================================================
 # ÍTEM 7: ANÁLISIS BIVARIADO (NUMÉRICO VS CATEGÓRICO)
-# ====================================================
 elif modulos == "Ítem 7: Análisis bivariado (numérico vs categórico)":
     df = st.session_state["df"]
     if df is not None:
