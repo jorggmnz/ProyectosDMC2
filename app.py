@@ -182,7 +182,7 @@ elif modulos == "Ítem 3: Estadísticas descriptivas":
     else:
         st.info("Carga un archivo en el módulo correspondiente.")
         
-# ÍTEM 4: ANÁLISIS DE VALORES FALTANTES
+#ÍTEM 4: ANÁLISIS DE VALORES FALTANTES
 elif modulos == "Ítem 4: Análisis de valores faltantes":
     df = st.session_state["df"]
     if df is not None:
@@ -221,7 +221,7 @@ elif modulos == "Ítem 4: Análisis de valores faltantes":
     else:
         st.info("Carga un archivo en el módulo correspondiente.")
 
-# ÍTEM 5: DISTRIBUCIÓN DE VARIABLES NUMÉRICAS
+#ÍTEM 5: DISTRIBUCIÓN DE VARIABLES NUMÉRICAS
 elif modulos == "Ítem 5: Distribución de variables numéricas":
     df = st.session_state["df"]
     if df is not None:
@@ -269,7 +269,7 @@ elif modulos == "Ítem 5: Distribución de variables numéricas":
         st.info("Carga un archivo en el módulo correspondiente.")
 
 
-# ÍTEM 6: ANÁLISIS DE VARIABLES CATEGÓRICAS
+#ÍTEM 6: ANÁLISIS DE VARIABLES CATEGÓRICAS
 elif modulos == "Ítem 6: Análisis de variables categóricas":
     df = st.session_state["df"]
     if df is not None:
@@ -312,12 +312,11 @@ elif modulos == "Ítem 7: Análisis bivariado (numérico vs categórico)":
     if df is not None:
         st.subheader("Ítem 7: Análisis Bivariado (Numérico vs Categórico)")
 
-        # Definir pares de comparación predeterminados
+        #Definir pares de comparación
         comparaciones = [
             ("player_rating", "position"),
             ("performance_score", "match_result"),
             ("distance_covered_km", "position"),
-            ("top_speed_kmh", "position"),
         ]
 
         # Filtrar solo las parejas que existan en el dataset
@@ -331,14 +330,14 @@ elif modulos == "Ítem 7: Análisis bivariado (numérico vs categórico)":
             opcion = st.selectbox("Seleccione la relación a analizar", comp_validas)
             num_var, cat_var = opcion.split(" vs ")
 
-            # Gráfico de caja (Boxplot)
+            #Boxplot
             fig, ax = plt.subplots(figsize=(8, 4))
             sns.boxplot(data=df, x=cat_var, y=num_var, ax=ax, palette="Set2")
             ax.set_title(f"Distribución de {num_var} por {cat_var}")
             plt.xticks(rotation=45)
             st.pyplot(fig)
 
-            # Estadísticas agrupadas (Media y Mediana)
+            #Media y Mediana
             st.write(f"**Resumen estadístico de {num_var} según {cat_var}:**")
             resumen = (
                 df.groupby(cat_var)[num_var]
@@ -349,7 +348,7 @@ elif modulos == "Ítem 7: Análisis bivariado (numérico vs categórico)":
         else:
             st.warning("No se encontraron las columnas requeridas para las comparaciones predeterminadas.")
     else:
-        st.info("Carga un archivo CSV en el módulo correspondiente.")
+        st.info("Carga un archivo en el módulo correspondiente.")
 
 # ====================================================
 # ÍTEM 8: ANÁLISIS BIVARIADO (CATEGÓRICO VS CATEGÓRICO)
