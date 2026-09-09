@@ -10,7 +10,7 @@ st.write("Módulo: N°2 de Python Fundamentals | Año: 2026")
 # Separador visual
 st.divider()
 
-# Inicializar st.session_state para mantener el DataFrame en memoria
+#Mantener el DataFrame en memoria
 if "df" not in st.session_state:
     st.session_state["df"] = None
 
@@ -21,7 +21,6 @@ def clasificar_variables(dataframe):
     cat_cols = dataframe.select_dtypes(exclude=["number"]).columns.tolist()
     return num_cols, cat_cols, len(num_cols), len(cat_cols)
 
-# Menú lateral
 st.sidebar.title("Parámetros")
 modulos = st.sidebar.selectbox(
     "Seleccione un módulo",
@@ -41,7 +40,6 @@ modulos = st.sidebar.selectbox(
     ],
 )
 
-# HOME
 if modulos == "Home":
     st.subheader("Información General del Estudiante")
     st.write("**Elaborado por:** Jorge Enrique Muñoz Ccasa")
@@ -86,7 +84,7 @@ elif modulos == "Ítem 1: Información general del dataset":
     if df is not None:
         st.subheader("Ítem 1: Información General")
 
-        # Tabla de tipos y nulos
+        #Tabla de tipos y nulos
         info_df = pd.DataFrame(
             {
                 "Tipo de Dato": df.dtypes.astype(str),
@@ -99,14 +97,14 @@ elif modulos == "Ítem 1: Información general del dataset":
         )
         st.dataframe(info_df, use_container_width=True)
 
-        # Duplicados
+        #Duplicados
         duplicados = df.duplicated().sum()
         if duplicados > 0:
             st.warning(f"Se detectaron {duplicados:,} registros duplicados.")
         else:
             st.success("No hay registros duplicados.")
 
-        # Consola df.info()
+        #df.info()
         with st.expander("Ver salida técnica de df.info()"):
             buffer = io.StringIO()
             df.info(buf=buffer)
@@ -146,7 +144,8 @@ elif modulos == "Ítem 3: Estadísticas descriptivas":
         num_vars, _, _, _ = clasificar_variables(df)
 
         if num_vars:
-            # Resumen .describe()
+            
+            #Resumen
             st.write("**Resumen Estadístico**")
             st.dataframe(
                 df[num_vars].describe().T.style.format("{:.2f}"),
