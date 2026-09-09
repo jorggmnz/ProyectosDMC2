@@ -197,7 +197,6 @@ elif modulos == "Ítem 3: Estadísticas descriptivas":
         st.info("Carga un archivo en el módulo correspondiente.")
 """
 
-
 #ÍTEM 4: ANÁLISIS DE VALORES FALTANTES
 elif modulos == "Ítem 4: Análisis de valores faltantes":
     df = st.session_state["df"]
