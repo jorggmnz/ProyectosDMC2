@@ -7,10 +7,10 @@ import streamlit as st
 st.title("Proyecto aplicado N°2: Carga y validación de datos")
 st.write("Módulo: N°2 de Python Fundamentals | Año: 2026")
 
-# Separador visual
+#Separador visual
 st.divider()
 
-# Mantener el DataFrame en memoria
+#Mantener el DataFrame en memoria
 if "df" not in st.session_state:
     st.session_state["df"] = None
 
@@ -22,13 +22,13 @@ def clasificar_variables(dataframe):
     return num_cols, cat_cols, len(num_cols), len(cat_cols)
 
 
-# Función para separar métricas según el rol del jugador
+#Separar métricas según el rol del jugador
 def obtener_metricas_por_rol(df_input):
     metricas_gk = [
         c for c in df_input.columns if any(p in c.lower() for p in ["saves", "clean_sheets", "goals_conceded", "atajadas", "goles_recibidos"])
     ]
     
-    # Excluir identificadores y métricas exclusivas de porteros para jugadores de campo
+    # Excluir métricas exclusivas de porteros para jugadores de campo
     metricas_campo = [
         c for c in df_input.select_dtypes(include=["number"]).columns
         if c not in metricas_gk and not any(id_kw in c.lower() for id_kw in ["id", "number", "jersey"])
@@ -68,7 +68,7 @@ if modulos == "Home":
         "Tecnologías empleadas: GitHub, Streamlit y Python."
     )
 
-# Carga del dataset
+#Carga del dataset
 elif modulos == "Carga del dataset":
     archivo_cargado = st.file_uploader("Carga tu archivo", type=["csv"])
 
@@ -93,7 +93,7 @@ elif modulos == "Carga del dataset":
         st.info("Por favor, sube un archivo para continuar.")
 
 
-# ÍTEM 1: INFORMACIÓN GENERAL DEL DATASET
+#ÍTEM 1: INFORMACIÓN GENERAL DEL DATASET
 elif modulos == "Ítem 1: Información general del dataset":
     df = st.session_state["df"]
     if df is not None:
@@ -147,7 +147,7 @@ elif modulos == "Ítem 2: Clasificación de variables":
         st.info("Carga un archivo en el módulo correspondiente.")
 
 
-# ÍTEM 3: ESTADÍSTICAS DESCRIPTIVAS
+#ÍTEM 3: ESTADÍSTICAS DESCRIPTIVAS
 elif modulos == "Ítem 3: Estadísticas descriptivas":
     df = st.session_state["df"]
     if df is not None:
@@ -196,7 +196,7 @@ elif modulos == "Ítem 3: Estadísticas descriptivas":
         st.info("Carga un archivo en el módulo correspondiente.")
 
 
-# ÍTEM 4: ANÁLISIS DE VALORES FALTANTES
+#ÍTEM 4: ANÁLISIS DE VALORES FALTANTES
 elif modulos == "Ítem 4: Análisis de valores faltantes":
     df = st.session_state["df"]
     if df is not None:
@@ -234,13 +234,13 @@ elif modulos == "Ítem 4: Análisis de valores faltantes":
         st.info("Carga un archivo en el módulo correspondiente.")
 
 
-# ÍTEM 5: DISTRIBUCIÓN DE VARIABLES NUMÉRICAS
+#ÍTEM 5: DISTRIBUCIÓN DE VARIABLES NUMÉRICAS
 elif modulos == "Ítem 5: Distribución de variables numéricas":
     df = st.session_state["df"]
     if df is not None:
         st.subheader("Ítem 5: Distribución de Variables Numéricas")
 
-        # --- REGLA 1: Diferenciación de métricas por Posición/Rol ---
+        #Diferenciación de métricas por Posición/Rol ---
         col_pos = [c for c in df.columns if "pos" in c.lower()]
         
         # Selección de rol para acotar el análisis
@@ -258,7 +258,7 @@ elif modulos == "Ítem 5: Distribución de variables numéricas":
         else:
             df_view = df.copy()
 
-        # --- REGLA 2: Control de nivel de agregación ---
+        #Control de nivel de agregación ---
         modo_agregacion = st.selectbox("Nivel de análisis de los datos:", ["Por Partido (Registro Directo)", "Acumulado por Jugador (Promedio)"])
         
         if modo_agregacion == "Acumulado por Jugador (Promedio)" and "player_name" in df_view.columns:
@@ -289,7 +289,7 @@ elif modulos == "Ítem 5: Distribución de variables numéricas":
         st.info("Carga un archivo en el módulo correspondiente.")
 
 
-# ÍTEM 6: ANÁLISIS DE VARIABLES CATEGÓRICAS
+#ÍTEM 6: ANÁLISIS DE VARIABLES CATEGÓRICAS
 elif modulos == "Ítem 6: Análisis de variables categóricas":
     df = st.session_state["df"]
     if df is not None:
@@ -326,13 +326,13 @@ elif modulos == "Ítem 6: Análisis de variables categóricas":
         st.info("Carga un archivo en el módulo correspondiente.")
 
 
-# ÍTEM 7: ANÁLISIS BIVARIADO (NUMÉRICO VS CATEGÓRICO)
+#ÍTEM 7: ANÁLISIS BIVARIADO (NUMÉRICO VS CATEGÓRICO)
 elif modulos == "Ítem 7: Análisis bivariado (numérico vs categórico)":
     df = st.session_state["df"]
     if df is not None:
         st.subheader("Ítem 7: Análisis Bivariado (Numérico vs Categórico)")
 
-        # Agregación previa para evitar sumar registros duplicados por partido si se evalúa nivel global
+        #Agregado para evitar sumar registros duplicados por partido
         eval_level = st.radio("Evaluación métrica:", ["Por partido individual", "Promedio por jugador en el torneo"], horizontal=True)
         
         df_biv = df.copy()
@@ -376,7 +376,7 @@ elif modulos == "Ítem 7: Análisis bivariado (numérico vs categórico)":
         st.info("Carga un archivo en el módulo correspondiente.")
 
 
-# ÍTEM 8: ANÁLISIS BIVARIADO (CATEGÓRICO VS CATEGÓRICO)
+#ÍTEM 8: ANÁLISIS BIVARIADO (CATEGÓRICO VS CATEGÓRICO)
 elif modulos == "Ítem 8: Análisis bivariado (categórico vs categórico)":
     df = st.session_state["df"]
     if df is not None:
@@ -414,10 +414,10 @@ elif modulos == "Ítem 8: Análisis bivariado (categórico vs categórico)":
         else:
             st.warning("No se encontraron las columnas requeridas para las comparaciones categóricas.")
     else:
-        st.info("Carga un archivo CSV en el módulo correspondiente.")
+        st.info("Carga un archivo en el módulo correspondiente.")
 
 
-# ÍTEM 9: ANÁLISIS BASADO EN PARÁMETROS SELECCIONADOS
+#ÍTEM 9: ANÁLISIS BASADO EN PARÁMETROS SELECCIONADOS
 elif modulos == "Ítem 9: Análisis basado en parámetros seleccionados":
     df = st.session_state["df"]
     if df is not None:
@@ -428,10 +428,10 @@ elif modulos == "Ítem 9: Análisis basado en parámetros seleccionados":
         if "match_date" in df_filt.columns:
             df_filt["match_date"] = pd.to_datetime(df_filt["match_date"], errors="coerce")
 
-        # --- SECCIÓN DE FILTROS ---
+        #SECCIÓN DE FILTROS
         st.sidebar.markdown("### Filtros Dinámicos")
 
-        # 1. Filtro de Rol
+        #1 Filtro de Rol
         col_pos = [c for c in df_filt.columns if "pos" in c.lower()]
         if col_pos:
             filtro_rol = st.sidebar.radio("Filtrar Posición/Rol:", ["Todos", "Solo Porteros", "Solo Jugadores de Campo"])
@@ -440,7 +440,7 @@ elif modulos == "Ítem 9: Análisis basado en parámetros seleccionados":
             elif filtro_rol == "Solo Jugadores de Campo":
                 df_filt = df_filt[~df_filt[col_pos[0]].astype(str).str.upper().str.contains("GK|GOALKEEPER|PORTERO|ARQUERO")]
 
-        # 2. Otros filtros categóricos
+        #2 Filtros categóricos
         filtros_cat = ["team", "tournament_stage", "match_result", "player_name"]
         for col in filtros_cat:
             if col in df_filt.columns:
@@ -449,7 +449,7 @@ elif modulos == "Ítem 9: Análisis basado en parámetros seleccionados":
                 if sel:
                     df_filt = df_filt[df_filt[col].isin(sel)]
 
-        # 3. Tratamiento de Métricas (Consolidación para no duplicar sumas de partido)
+        #3 Tratamiento de Métricas (Para no duplicar sumas de partido)
         agrupar_jugador = st.sidebar.checkbox("Consolidar promedios por jugador (Evita duplicados por partido)", value=False)
         if agrupar_jugador and "player_name" in df_filt.columns:
             num_cols = df_filt.select_dtypes(include=["number"]).columns.tolist()
@@ -470,7 +470,7 @@ elif modulos == "Ítem 9: Análisis basado en parámetros seleccionados":
             )
             df_filt = df_filt[(df_filt[col_num] >= rango[0]) & (df_filt[col_num] <= rango[1])]
 
-        # --- PRESENTACIÓN DE RESULTADOS ---
+        #RESULTADOS
         st.write(f"**Registros encontrados:** {len(df_filt):,} de {len(df):,}")
 
         if not df_filt.empty:
@@ -494,4 +494,4 @@ elif modulos == "Ítem 9: Análisis basado en parámetros seleccionados":
         else:
             st.warning("No hay registros que cumplan con los filtros seleccionados.")
     else:
-        st.info("Carga un archivo CSV en el módulo correspondiente.")
+        st.info("Carga un archivo en el módulo correspondiente.")
