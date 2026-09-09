@@ -110,7 +110,7 @@ elif modulos == "Ítem 1: Información general del dataset":
             df.info(buf=buffer)
             st.text(buffer.getvalue())
     else:
-        st.info("Carga un archivo CSV en el módulo correspondiente.")
+        st.info("Carga un archivo en el módulo correspondiente.")
 
 
 #ÍTEM 2: CLASIFICACIÓN DE VARIABLES
@@ -132,7 +132,7 @@ elif modulos == "Ítem 2: Clasificación de variables":
         col_b.write("**Categóricas:**")
         col_b.json(cat_vars)
     else:
-        st.info("Carga un archivo CSV en el módulo correspondiente.")
+        st.info("Carga un archivo en el módulo correspondiente.")
 
 #ÍTEM 3: ESTADÍSTICAS DESCRIPTIVAS
 
@@ -143,23 +143,35 @@ elif modulos == "Ítem 3: Estadísticas descriptivas":
 
         num_vars, _, _, _ = clasificar_variables(df)
 
+        # Filtrar identificadores numéricos que no representan métricas
+        num_vars = [v for v in num_vars if "number" not in v.lower() and "id" not in v.lower()]
+
         if num_vars:
-            
-            #Resumen
+            # Resumen Estadístico
             st.write("**Resumen Estadístico**")
             st.dataframe(
                 df[num_vars].describe().T.style.format("{:.2f}"),
                 use_container_width=True,
             )
 
-            #Rango intercuartilico y detección outliers (IQR)
+            # Detección de Outliers (IQR con lógica ajustada)
             st.write("**Detección de Valores Extremos (Criterio 1.5xIQR)**")
             outliers_data = []
+            
             for col in num_vars:
                 q1 = df[col].quantile(0.25)
                 q3 = df[col].quantile(0.75)
                 iqr = q3 - q1
-                lim_inf, lim_sup = q1 - 1.5 * iqr, q3 + 1.5 * iqr
+                
+                lim_inf = q1 - 1.5 * iqr
+                lim_sup = q3 + 1.5 * iqr
+                
+                # Ajustar límite inferior a 0 si la variable no admite valores negativos
+                if df[col].min() >= 0:
+                    lim_inf_adj = max(0.0, lim_inf)
+                else:
+                    lim_inf_adj = lim_inf
+
                 cant_out = df[
                     (df[col] < lim_inf) | (df[col] > lim_sup)
                 ].shape[0]
@@ -167,8 +179,9 @@ elif modulos == "Ítem 3: Estadísticas descriptivas":
                 outliers_data.append(
                     {
                         "Variable": col,
-                        "Límite Inferior": round(lim_inf, 2),
-                        "Límite Superior": round(lim_sup, 2),
+                        "Límite Inf. (Calculado)": round(lim_inf, 2),
+                        "Límite Inf. (Ajustado)": round(lim_inf_adj, 2),
+                        "Límite Sup.": round(lim_sup, 2),
                         "Cant. Outliers": cant_out,
                         "% Outliers": f"{(cant_out / len(df)) * 100:.2f}%",
                     }
@@ -178,7 +191,7 @@ elif modulos == "Ítem 3: Estadísticas descriptivas":
                 pd.DataFrame(outliers_data), use_container_width=True
             )
         else:
-            st.info("El dataset no contiene variables numéricas.")
+            st.info("El dataset no contiene variables numéricas aplicables.")
     else:
         st.info("Carga un archivo en el módulo correspondiente.")
         
